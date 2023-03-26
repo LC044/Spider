@@ -4,27 +4,27 @@
 
 运行结果《春闺梦里人》：
 
-![春闺梦里人_01](.\assets\春闺梦里人_01.png)
+![春闺梦里人_01](./assets/春闺梦里人_01.png)
 
-![image-20230326200219616](.\assets\image-20230326200219616.png)
+![image-20230326200219616](./assets/image-20230326200219616.png)
 
 # 二、定位数据
 
 第一步肯定是F12抓取网站数据，先看看有没有可以利用的数据
 
-![image-20230326200539829](.\assets\image-20230326200539829.png)
+![image-20230326200539829](./assets/image-20230326200539829.png)
 
 找啊找，终于发现一点端倪，这个东西好像有点意思，点开看看
 
-![image-20230326200739654](.\assets\image-20230326200739654.png)
+![image-20230326200739654](./assets/image-20230326200739654.png)
 
 这不就是我们想要的数据吗，so easy啊
 
-![image-20230326200836332](.\assets\image-20230326200836332.png)
+![image-20230326200836332](./assets/image-20230326200836332.png)
 
 找到URL，试试看能不能get到json数据
 
-![image-20230326200920590](D:\Project\Python\Spider\TencentVideo\assets\image-20230326200920590.png)
+![image-20230326200920590](./assets/image-20230326200920590.png)
 
 ```Python
 import requests
@@ -33,7 +33,7 @@ resp = requests.get(url)
 print(resp.json())
 ```
 
-![image-20230326201044948](.\assets\image-20230326201044948.png)
+![image-20230326201044948](./assets/image-20230326201044948.png)
 
 这也太简单了吧，连防爬措施都没有
 
