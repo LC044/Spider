@@ -88,7 +88,7 @@ while True:
 
 这集电视剧弹幕就搞定了
 
-# 二、获取targetID
+# 三、获取targetID
 
 URL后面的数字解决了，那前面的一串n0045clizl7字符是什么东西
 
@@ -110,10 +110,59 @@ URL后面的数字解决了，那前面的一串n0045clizl7字符是什么东西
 
 接下来就不用我多说了吧
 
+# 四、性能优化
+
+视频弹幕分为很多集，每集的弹幕有很多片段，每请求一次都要消耗很多网络IO时间，所以按顺序一个个爬取每一集的弹幕会很慢。使用多线程或多进程会提高爬取速度。
+但是像这种IO较为频繁的系统，用异步协程能大大节省资源并提升性能。协程能够在IO等待时间就去切换执行其他任务，当IO操作结束后再自动回调。
+
+**协程**（单线程），英文叫coroutine，又称微线程、纤程，是一种运行在用户状态的轻量级线程。它拥有自己的寄存器上下文和栈，在调度切换时，将寄存器上下文和栈保存到其他地方，等切回来时，再恢复到先前保存的寄存器上下文和栈。因此，协程能保留上一次调用时的状态，所有局部状态的一个特定组合，每次过程重入，就相当于进入上一次调用的状态。
+
+1. event_loop：事件循环，相当于一个无限循环，我们可以把一个函数注册到这个事件循环上，当满足发生条件的时候，就调用对应的处理方法。
+
+2. coroutine：协程，指代协程对象类型，我们可以将协程对象注册到事件循环中，它会被事件循环调用。我们可以使用async关键字来定义一个方法，这个方法再调用时不会被立即执行，而是返回一个协程对象
+
+3. task：任务，这是协程对象的进一步封装，包含协程的各个状态
+
+4. future：代表将来执行或者没有执行的任务的结果，实际上和task没有本质区别
 
 
-# 四、完整代码
 
-GitHub：https://github.com/LC044/Spider/tree/master/TencentVideo
+* 用协程读写文件
 
-![image-20230326211619624](assets/image-20230326211619624.png)
+```python
+async def write_file(filename, content):  # ! 将内容写入文件  
+    async with aiofiles.open(filename, 'a', encoding='utf-8') as f:  
+        for c in content:  
+            await f.writelines(f'{c};')
+```
+
+* 用协程进行网络请求
+
+```python
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as resp:
+            data = await  resp.json()
+            barrage_list = data['barrage_list']
+            content = []
+            for comment in barrage_list:
+                danmu = comment['content']
+                content.append(danmu)
+            if (content):
+                print(content)
+            else:
+                print("waiting!!!!")
+```
+
+# 五、运行说明
+
+1. 环境配置
+   
+   ```shell
+   pip install -r requirements.txt
+   ```
+
+2. 启动文件
+   
+   ```shell
+   python 异步.py
+   ```

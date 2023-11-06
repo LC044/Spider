@@ -118,10 +118,6 @@ async def get_danmu(target_id, timestamp, session):  # ! 获取弹幕
     async with aiohttp.ClientSession() as session:
         # async with session.get(url, data=Payload) as resp:
         async with session.get(url) as resp:
-            # dat = await resp.text()
-            # data = dat.lstrip(Payload['callback'] + '(').rstrip(")")
-            # data = json.loads(data, strict=False)
-            # comments = data['comments']
             data = await  resp.json()
             barrage_list = data['barrage_list']
             content = []
@@ -138,7 +134,6 @@ async def get_danmu(target_id, timestamp, session):  # ! 获取弹幕
 async def write_file(filename, content):  # ! 将内容写入文件
     async with aiofiles.open(filename, 'a', encoding='utf-8') as f:
         for c in content:
-            # 'a'.encode('utf-8')
             await f.writelines(f'{c};')
 
 
