@@ -2,3 +2,4 @@ requests
 jieba
 wordcloud
 Beautifulsoup4
+aiohttp
